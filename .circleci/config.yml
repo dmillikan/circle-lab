@@ -61,4 +61,6 @@ workflows:
             alias: "build-it"
             parameters:
               platform: ["ios", "android"]
-      - upload  
+      - upload:
+          requires:
+            - build-it
