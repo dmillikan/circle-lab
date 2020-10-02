@@ -5,6 +5,8 @@ jobs:
     docker:
       - image: alpine
     steps:
+      - attach_workspace:
+            at: /tmp/
       - run: |
           mkdir ios
           echo hello >> ios/main.jsbundle
@@ -19,8 +21,7 @@ jobs:
           # mkdir android/app/build/outputs/apk
           # echo hello >> android/app/build/outputs/apk/file1
           # cat android/app/build/outputs/apk/file1
-      - attach_workspace:
-            at: /tmp/
+
       - persist_to_workspace:
             root: /tmp/ios
             paths:
