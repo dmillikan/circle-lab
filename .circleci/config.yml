@@ -8,7 +8,7 @@ executors:
       - image: alpine
 
 jobs:
-  build:
+  buildit:
     parameters:
       platform:
         type: executor
@@ -27,7 +27,6 @@ jobs:
             mkdir android/app/build/outputs/apk
             echo hello >> android/app/build/outputs/apk/file1
             cat android/app/build/outputs/apk/file1
-
             cp android/app/build/outputs/apk/ /tmp/android
           else
             mkdir ios
@@ -39,14 +38,22 @@ jobs:
 
 
           
-      - persist_to_workspace:
-            root: ios
-            paths:
-              - ./*.jsbundle
-      - persist_to_workspace:
-            root: /tmp/android
-            paths:
-              - android/app/build/outputs/apk/*
+      # - persist_to_workspace:
+      #       root: ios
+      #       paths:
+      #         - ./*.jsbundle
+      # - persist_to_workspace:
+      #       root: /tmp/android
+      #       paths:
+      #         - android/app/build/outputs/apk/*
           
-# workflows:
+workflows:
+  build:
+    jobs:
+      - buildit:
+          name: build-it-<< matrix.platform >>
+          matrix:
+            alias: "build-it"
+            parameters:
+              platform: ["ios", "android"]
             
