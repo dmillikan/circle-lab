@@ -37,10 +37,10 @@ jobs:
             root: ios
             paths:
               - ./*.jsbundle
-      # - persist_to_workspace:
-      #       root: /tmp/android
-      #       paths:
-      #         - android/app/build/outputs/apk/*
+      - persist_to_workspace:
+            root: android/app/build/outputs/apk
+            paths:
+              - ./*
           
 workflows:
   build:
