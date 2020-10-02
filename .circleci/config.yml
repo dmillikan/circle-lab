@@ -1,27 +1,44 @@
 version: 2.1
+executors: 
+  ios:
+    docker:
+      - image: alpine
+  android:
+    docker:
+      - image: alpine
 
 jobs:
   build:
-    docker:
-      - image: alpine
+    parameters:
+      platform:
+        type: executor
+    executor: << parameters.platform >>
     steps:
       - attach_workspace:
             at: /tmp/
       - run: |
-          mkdir ios
-          echo hello >> ios/main.jsbundle
-          cat ios/main.jsbundle
-          pwd
-          ls -la
+          export PLATFORM=`echo $CIRCLE_JOB | sed 's/build-react-//'`
+          if [ $PLATFORM = ANDROID ]
+          then
+            mkdir android
+            mkdir android/app
+            mkdir android/app/build
+            mkdir android/app/build/outputs
+            mkdir android/app/build/outputs/apk
+            echo hello >> android/app/build/outputs/apk/file1
+            cat android/app/build/outputs/apk/file1
 
-          # mkdir android
-          # mkdir android/app
-          # mkdir android/app/build
-          # mkdir android/app/build/outputs
-          # mkdir android/app/build/outputs/apk
-          # echo hello >> android/app/build/outputs/apk/file1
-          # cat android/app/build/outputs/apk/file1
+            cp android/app/build/outputs/apk/ /tmp/android
+          else
+            mkdir ios
+            echo hello >> ios/main.jsbundle
+            cat ios/main.jsbundle
+            cp ios/main.jsbundle /ios/main.jsbundle
+          fi
 
+
+
+          
       - persist_to_workspace:
             root: ios
             paths:
