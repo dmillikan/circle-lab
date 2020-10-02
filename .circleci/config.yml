@@ -23,7 +23,7 @@ jobs:
           # cat android/app/build/outputs/apk/file1
 
       - persist_to_workspace:
-            root: /tmp/ios
+            root: ios
             paths:
               - ./*.jsbundle
       - persist_to_workspace:
