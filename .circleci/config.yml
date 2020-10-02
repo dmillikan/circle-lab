@@ -45,7 +45,7 @@ jobs:
             cat ios/main.jsbundle
             # mkdir workspace.tmp
             # mkdir workspace.tmp/ios
-            cp ios/main.jsbundle workspace.tmp/ios
+            # cp ios/main.jsbundle workspace.tmp/ios
             cp ios/main.jsbundle /workspace/ios
           fi
           
