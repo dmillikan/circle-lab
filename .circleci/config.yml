@@ -24,7 +24,7 @@ jobs:
       - persist_to_workspace:
             root: /tmp/ios
             paths:
-              - /*.jsbundle
+              - ./*.jsbundle
       - persist_to_workspace:
             root: /tmp/android
             paths:
