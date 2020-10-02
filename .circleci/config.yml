@@ -67,8 +67,8 @@ jobs:
           path: ~/workspace/
           destination: /
       - slack/notify:
-          color: '#FF0000'
-          message: U+1F525 IOS AND ANDROID ARTIFACTS READY
+          color: '#FF00FF'
+          message: ':fire: IOS AND ANDROID ARTIFACTS READY :fire:'
 
 workflows:
   build:
