@@ -51,9 +51,9 @@ jobs:
             at: /workspace/
       - run: |
           ls -la /workspace/
-
       - store_artifacts:
           path: /workspace/
+          destination: /
 
 workflows:
   build:
