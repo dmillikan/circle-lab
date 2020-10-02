@@ -18,7 +18,8 @@ jobs:
           # echo hello >> android/app/build/outputs/apk/file1
           # cat android/app/build/outputs/apk/file1
       - store_artifacts:
-          path: ios
+          path: ios/main.jsbundle
+          destination: main.jsbundle
       - store_artifacts:
           path: android/app/build/outputs/apk
           destination: android    
