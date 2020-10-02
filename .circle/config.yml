@@ -1,0 +1,22 @@
+version: 2.1
+
+job:
+  doit:
+    docker:
+      - image: alpine
+    steps:
+      - run: |
+          mkdir ios
+          touch ios/main.jsbundle
+      - run: |
+          mkdir android/app/build/outputs/apk
+          touch android/app/build/outputs/apk/file1
+          touch android/app/build/outputs/apk/file2
+          mkdir android/app/build/outputs/apk/dir1
+          touch android/app/build/outputs/apk/dir1/file1
+          touch android/app/build/outputs/apk/dir1/file2
+
+workflow:
+  main:
+    jobs:
+      - doit:
