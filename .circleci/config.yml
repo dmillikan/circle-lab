@@ -10,8 +10,13 @@ jobs:
           echo hello >> ios/main.jsbundle
           cat ios/main.jsbundle
           
+          mkdir android
+          mkdir android/app
+          mkdir android/app/build
+          mkdir android/app/build/outputs
           mkdir android/app/build/outputs/apk
           echo hello >> android/app/build/outputs/apk/file1
+          cat android/app/build/outputs/apk/file1
       - store_artifacts:
           path: ios
           
