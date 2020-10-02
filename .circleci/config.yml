@@ -7,11 +7,6 @@ executors:
     docker:
       - image: alpine
 
-command:
-  make_traveller:
-    - run: |
-        ls -la /workspace/
-
 jobs:
   buildit:
     parameters:
@@ -31,13 +26,15 @@ jobs:
             mkdir android/app/build
             mkdir android/app/build/outputs
             mkdir android/app/build/outputs/apk
-            echo hello android >> android/app/build/outputs/apk/file1
+            echo hello android 1 >> android/app/build/outputs/apk/file1
             echo hello android 2 >> android/app/build/outputs/apk/file2
+            echo hello android 3 >> android/app/build/outputs/kpa/file1
+            echo hello android 4 >> android/app/build/outputs/kpa/file2
             cat android/app/build/outputs/apk/file1
             # mkdir workspace.tmp
             # mkdir workspace.tmp/android
             # cp -R android/app/build/outputs workspace.tmp/android
-            cp -R android/app/build/outputs /workspace/android
+            cp -R android/app/build/outputs/* /workspace/android
           else
             mkdir /workspace/ios
             mkdir ios
