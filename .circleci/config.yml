@@ -57,7 +57,7 @@ jobs:
             - ./*
   upload:
     docker:
-      - image: alpine
+      - image: 'cibuilds/base:latest'
     steps:
       - attach_workspace:
           at: ~/workspace/
@@ -68,7 +68,7 @@ jobs:
           destination: /
       - slack/notify:
           color: '#FF0000'
-          message: IOS AND ANDROID ARTIFACTS READY
+          message: U+1F525 IOS AND ANDROID ARTIFACTS READY
 
 workflows:
   build:
