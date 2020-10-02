@@ -26,6 +26,7 @@ jobs:
             mkdir android/app/build/outputs
             mkdir android/app/build/outputs/apk
             echo hello android >> android/app/build/outputs/apk/file1
+            echo hello android 2 >> android/app/build/outputs/apk/file2
             cat android/app/build/outputs/apk/file1
             mkdir workspace
             mkdir workspace/android
@@ -43,7 +44,14 @@ jobs:
             root: workspace
             paths:
               - ./*
-          
+  upload:
+    executor: ios
+    steps:
+      - attach_workspace:
+            at: /workspace/
+      - store_artifacts:
+          path: /workspace/
+
 workflows:
   build:
     jobs:
@@ -53,4 +61,4 @@ workflows:
             alias: "build-it"
             parameters:
               platform: ["ios", "android"]
-            
+      - upload  
