@@ -27,18 +27,20 @@ jobs:
             mkdir android/app/build/outputs/apk
             echo hello >> android/app/build/outputs/apk/file1
             cat android/app/build/outputs/apk/file1
+            mkdir workspace
+            mkdir workspace/android
+            cp android/app/build/outputs/* workspace/android
           else
             mkdir ios
             echo hello >> ios/main.jsbundle
             cat ios/main.jsbundle
+            mkdir workspace
+            mkdir workspace/ios
+            cp ios/main.jsbundle workspace/ios
           fi
           
       - persist_to_workspace:
-            root: ios
-            paths:
-              - ./*.jsbundle
-      - persist_to_workspace:
-            root: android/app/build/outputs/apk
+            root: workspace
             paths:
               - ./*
           
