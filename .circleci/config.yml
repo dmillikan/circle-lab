@@ -1,7 +1,7 @@
 version: 2.1
 
 job:
-  doit:
+  build:
     docker:
       - image: alpine
     steps:
@@ -19,4 +19,4 @@ job:
 workflow:
   main:
     jobs:
-      - doit:
+      - build:
