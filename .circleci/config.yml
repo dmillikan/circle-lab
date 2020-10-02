@@ -26,6 +26,7 @@ jobs:
             mkdir android/app/build
             mkdir android/app/build/outputs
             mkdir android/app/build/outputs/apk
+            mkdir android/app/build/outputs/kpa
             echo hello android 1 >> android/app/build/outputs/apk/file1
             echo hello android 2 >> android/app/build/outputs/apk/file2
             echo hello android 3 >> android/app/build/outputs/kpa/file1
