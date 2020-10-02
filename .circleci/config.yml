@@ -17,7 +17,6 @@ jobs:
       - attach_workspace:
             at: ~/workspace/
       - run: |
-          
           export PLATFORM=`echo $CIRCLE_JOB | sed 's/build-it-//'`
           if [ $PLATFORM = android ]
           then
@@ -36,7 +35,7 @@ jobs:
             # mkdir workspace.tmp
             # mkdir workspace.tmp/android
             # cp -R android/app/build/outputs workspace.tmp/android
-            cp -R android/app/build/outputs/* /workspace/android
+            cp -R android/app/build/outputs/* ~/workspace/android
           else
             mkdir ~/workspace/ios
             mkdir ios
