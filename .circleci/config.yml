@@ -25,14 +25,14 @@ jobs:
             mkdir android/app/build
             mkdir android/app/build/outputs
             mkdir android/app/build/outputs/apk
-            echo hello >> android/app/build/outputs/apk/file1
+            echo hello android >> android/app/build/outputs/apk/file1
             cat android/app/build/outputs/apk/file1
             mkdir workspace
             mkdir workspace/android
-            cp android/app/build/outputs/* workspace/android
+            cp -R android/app/build/outputs workspace/android
           else
             mkdir ios
-            echo hello >> ios/main.jsbundle
+            echo hello ios >> ios/main.jsbundle
             cat ios/main.jsbundle
             mkdir workspace
             mkdir workspace/ios
