@@ -7,6 +7,11 @@ executors:
     docker:
       - image: alpine
 
+command:
+  make_traveller:
+    - run: |
+        ls -la /workspace/
+
 jobs:
   buildit:
     parameters:
@@ -15,11 +20,12 @@ jobs:
     executor: << parameters.platform >>
     steps:
       - attach_workspace:
-            at: /tmp/
+            at: /workspace/
       - run: |
           export PLATFORM=`echo $CIRCLE_JOB | sed 's/build-it-//'`
           if [ $PLATFORM = android ]
           then
+            mkdir /workspace/android
             mkdir android
             mkdir android/app
             mkdir android/app/build
@@ -28,20 +34,23 @@ jobs:
             echo hello android >> android/app/build/outputs/apk/file1
             echo hello android 2 >> android/app/build/outputs/apk/file2
             cat android/app/build/outputs/apk/file1
-            mkdir workspace
-            mkdir workspace/android
-            cp -R android/app/build/outputs workspace/android
+            # mkdir workspace.tmp
+            # mkdir workspace.tmp/android
+            # cp -R android/app/build/outputs workspace.tmp/android
+            cp -R android/app/build/outputs /workspace/android
           else
+            mkdir /workspace/ios
             mkdir ios
             echo hello ios >> ios/main.jsbundle
             cat ios/main.jsbundle
-            mkdir workspace
-            mkdir workspace/ios
-            cp ios/main.jsbundle workspace/ios
+            # mkdir workspace.tmp
+            # mkdir workspace.tmp/ios
+            cp ios/main.jsbundle workspace.tmp/ios
+            cp ios/main.jsbundle /workspace/ios
           fi
           
       - persist_to_workspace:
-            root: workspace
+            root: workspace.tmp
             paths:
               - ./*
   upload:
