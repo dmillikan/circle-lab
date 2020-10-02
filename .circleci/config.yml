@@ -15,9 +15,8 @@ jobs:
     executor: << parameters.platform >>
     steps:
       - attach_workspace:
-          at: /tmp/
+            at: /tmp/
       - run: |
-          ls -la /tmp/
           export PLATFORM=`echo $CIRCLE_JOB | sed 's/build-it-//'`
           if [ $PLATFORM = android ]
           then
@@ -28,21 +27,16 @@ jobs:
             mkdir android/app/build/outputs/apk
             echo hello >> android/app/build/outputs/apk/file1
             cat android/app/build/outputs/apk/file1
-            cp android/app/build/outputs/apk/ /tmp/android
           else
             mkdir ios
             echo hello >> ios/main.jsbundle
             cat ios/main.jsbundle
-            cp ios/main.jsbundle /tmp/ios/main.jsbundle
           fi
-
-
-
           
-      # - persist_to_workspace:
-      #       root: ios
-      #       paths:
-      #         - ./*.jsbundle
+      - persist_to_workspace:
+            root: ios
+            paths:
+              - ./*.jsbundle
       # - persist_to_workspace:
       #       root: /tmp/android
       #       paths:
