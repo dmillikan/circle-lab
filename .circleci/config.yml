@@ -14,8 +14,8 @@ jobs:
         type: executor
     executor: << parameters.platform >>
     steps:
-      # - attach_workspace:
-      #       at: /workspace/
+      - attach_workspace:
+            at: /workspace/
       - run: |
           export PLATFORM=`echo $CIRCLE_JOB | sed 's/build-it-//'`
           if [ $PLATFORM = android ]
