@@ -18,7 +18,7 @@ jobs:
             at: /tmp/
       - run: |
           export PLATFORM=`echo $CIRCLE_JOB | sed 's/build-react-//'`
-          if [ $PLATFORM = ANDROID ]
+          if [ $PLATFORM = android ]
           then
             mkdir android
             mkdir android/app
