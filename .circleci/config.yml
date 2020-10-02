@@ -9,7 +9,7 @@ jobs:
           mkdir ios
           echo hello >> ios/main.jsbundle
           cat ios/main.jsbundle
-          
+          pwd
           # mkdir android
           # mkdir android/app
           # mkdir android/app/build
