@@ -52,7 +52,8 @@ jobs:
           paths:
             - ./*
   upload:
-    executor: ios
+    docker:
+      - image: alpine
     steps:
       - attach_workspace:
           at: ~/workspace/
