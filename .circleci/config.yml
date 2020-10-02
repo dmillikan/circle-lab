@@ -32,7 +32,7 @@ jobs:
             mkdir ios
             echo hello >> ios/main.jsbundle
             cat ios/main.jsbundle
-            cp ios/main.jsbundle /ios/main.jsbundle
+            cp ios/main.jsbundle /tmp/ios/main.jsbundle
           fi
 
 
