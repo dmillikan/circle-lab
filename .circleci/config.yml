@@ -48,9 +48,9 @@ jobs:
           fi
           
       - persist_to_workspace:
-            root: /workspace
-            paths:
-              - ./*
+          root: /workspace
+          paths:
+            - ./*
   upload:
     executor: ios
     steps:
