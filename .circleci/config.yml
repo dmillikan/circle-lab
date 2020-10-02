@@ -14,14 +14,14 @@ jobs:
         type: executor
     executor: << parameters.platform >>
     steps:
-      # - attach_workspace:
-      #       at: /workspace/
+      - attach_workspace:
+            at: ~/workspace/
       - run: |
-          mkdir /workspace
+          mkdir ~/workspace
           export PLATFORM=`echo $CIRCLE_JOB | sed 's/build-it-//'`
           if [ $PLATFORM = android ]
           then
-            mkdir /workspace/android
+            mkdir ~/workspace/android
             mkdir android
             mkdir android/app
             mkdir android/app/build
@@ -38,29 +38,29 @@ jobs:
             # cp -R android/app/build/outputs workspace.tmp/android
             cp -R android/app/build/outputs/* /workspace/android
           else
-            mkdir /workspace/ios
+            mkdir ~/workspace/ios
             mkdir ios
             echo hello ios >> ios/main.jsbundle
             cat ios/main.jsbundle
             # mkdir workspace.tmp
             # mkdir workspace.tmp/ios
             # cp ios/main.jsbundle workspace.tmp/ios
-            cp ios/main.jsbundle /workspace/ios
+            cp ios/main.jsbundle ~/workspace/ios
           fi
           
       - persist_to_workspace:
-          root: /workspace
+          root: ~/workspace
           paths:
             - ./*
   upload:
     executor: ios
     steps:
       - attach_workspace:
-          at: /workspace/
+          at: ~/workspace/
       - run: |
-          ls -la /workspace/
+          ls -la ~/workspace/
       - store_artifacts:
-          path: /workspace/
+          path: ~/workspace/
           destination: /
 
 workflows:
