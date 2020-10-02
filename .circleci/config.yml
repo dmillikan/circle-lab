@@ -17,10 +17,13 @@ jobs:
           # mkdir android/app/build/outputs/apk
           # echo hello >> android/app/build/outputs/apk/file1
           # cat android/app/build/outputs/apk/file1
-      - store_artifacts:
-          path: ios/main.jsbundle
-          destination: main.jsbundle
-      - store_artifacts:
-          path: android/app/build/outputs/apk
-          destination: android    
+      - persist_to_workspace:
+            root: ios
+            paths:
+                - ios/main.jsbundle
+      - persist_to_workspace:
+            root: android
+            paths:
+              - android/app/build/outputs/apk/*
+          
           
