@@ -16,7 +16,7 @@ jobs:
           touch android/app/build/outputs/apk/dir1/file1
           touch android/app/build/outputs/apk/dir1/file2
 
-workflow:
+workflows:
   main:
     jobs:
       - doit:
