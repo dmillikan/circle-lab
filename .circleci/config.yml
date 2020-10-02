@@ -2,7 +2,7 @@ version: 2.1
 executors: 
   ios:
     docker:
-      - image: alpine
+      - image: cimg/python:3.8-node
   android:
     docker:
       - image: alpine
