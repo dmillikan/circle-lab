@@ -19,12 +19,14 @@ jobs:
           # mkdir android/app/build/outputs/apk
           # echo hello >> android/app/build/outputs/apk/file1
           # cat android/app/build/outputs/apk/file1
+      - attach_workspace:
+            at: /tmp/
       - persist_to_workspace:
-            root: ios
+            root: /tmp/ios
             paths:
-              - *.jsbundle
+              - /*.jsbundle
       - persist_to_workspace:
-            root: android
+            root: /tmp/android
             paths:
               - android/app/build/outputs/apk/*
           
