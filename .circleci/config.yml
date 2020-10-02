@@ -15,7 +15,7 @@ jobs:
     executor: << parameters.platform >>
     steps:
       - attach_workspace:
-            at: /tmp/
+          at: /tmp/
       - run: |
           ls -la /tmp/
           export PLATFORM=`echo $CIRCLE_JOB | sed 's/build-it-//'`
