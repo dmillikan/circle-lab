@@ -17,7 +17,7 @@ jobs:
       - attach_workspace:
             at: /tmp/
       - run: |
-          export PLATFORM=`echo $CIRCLE_JOB | sed 's/build-react-//'`
+          export PLATFORM=`echo $CIRCLE_JOB | sed 's/build-it-//'`
           if [ $PLATFORM = android ]
           then
             mkdir android
