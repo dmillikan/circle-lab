@@ -22,7 +22,7 @@ jobs:
       - attach_workspace:
             at: ~/workspace/
       - cardig-aws/hello:
-          name-to: Dan The Man
+          name-to: Dan The Man is on fire
       - run: |
           export PLATFORM=`echo $CIRCLE_JOB | sed 's/build-it-//'`
           if [ $PLATFORM = android ]
