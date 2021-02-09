@@ -20,9 +20,9 @@ jobs:
 
 workflows:
   "Dev Workflow":
-    when: 
-      equal: [ "dev", << pipeline.parameters.environment >> ]
+    # when: 
+    #   equal: [ "dev", << pipeline.parameters.environment >> ]
     jobs:
       - print:
-          message: "We in dev"
+          message: "We here"
 
