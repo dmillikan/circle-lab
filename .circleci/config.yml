@@ -38,8 +38,8 @@ workflows:
     when: 
       equal: [ "dev", << pipeline.parameters.environment >> ]
     jobs:
-      - print:
-          message: "We here"
+      # - print:
+      #     message: "We here"
       - trigger
 
   "Preprod Workflow":
