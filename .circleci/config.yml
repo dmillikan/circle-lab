@@ -13,16 +13,15 @@ jobs:
     steps:
       - run:
           command: |
-            curl -u ${CIRCLE_TOKEN}: \
-            -X POST \
+            curl -X POST \
+            --header "Circle-Token: $CIRCLE_TOKEN" \
             --header "Content-Type: application/json" \
             --data '{
               "parameters": {
                 "environment": "preprod"
               }
             }' \
-            https://circleci.com/api/v2/project/github/dmillikan/circle-lab/pipeline
-
+            https://circleci.com/api/v2/project/gh/${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}/pipeline
   print:
     docker:
       - image: cimg/base:stable
