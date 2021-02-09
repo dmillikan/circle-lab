@@ -1,87 +1,28 @@
 version: 2.1
-# d
-orbs:
-  slack: circleci/slack@3.4.2
-  cardig-aws: cardig/aws@dev:alpha
 
-executors: 
-  ios:
-    docker:
-      - image: cimg/python:3.8-node
-  android:
-    docker:
-      - image: alpine
+parameters:
+  environment:
+    type: string
+    default: "dev"
 
 jobs:
-  buildit:
-    parameters:
-      platform:
-        type: executor
-    executor: << parameters.platform >>
-    steps:
-      - attach_workspace:
-            at: ~/workspace/
-      - cardig-aws/hello:
-          name-to: Dan The Man is on fire
-      - run: |
-          export PLATFORM=`echo $CIRCLE_JOB | sed 's/build-it-//'`
-          if [ $PLATFORM = android ]
-          then
-            mkdir ~/workspace/android
-            mkdir android
-            mkdir android/app
-            mkdir android/app/build
-            mkdir android/app/build/outputs
-            mkdir android/app/build/outputs/apk
-            mkdir android/app/build/outputs/kpa
-            echo hello android 1 >> android/app/build/outputs/apk/file1
-            echo hello android 2 >> android/app/build/outputs/apk/file2
-            echo hello android 3 >> android/app/build/outputs/kpa/file1
-            echo hello android 4 >> android/app/build/outputs/kpa/file2
-            cat android/app/build/outputs/apk/file1
-            # mkdir workspace.tmp
-            # mkdir workspace.tmp/android
-            # cp -R android/app/build/outputs workspace.tmp/android
-            cp -R android/app/build/outputs/* ~/workspace/android
-          else
-            mkdir ~/workspace/ios
-            mkdir ios
-            echo hello ios >> ios/main.jsbundle
-            cat ios/main.jsbundle
-            # mkdir workspace.tmp
-            # mkdir workspace.tmp/ios
-            # cp ios/main.jsbundle workspace.tmp/ios
-            cp ios/main.jsbundle ~/workspace/ios
-          fi
-          
-      - persist_to_workspace:
-          root: ~/workspace
-          paths:
-            - ./*
-  upload:
+  print:
     docker:
-      - image: 'cibuilds/base:latest'
+      - image: cimg/base:latest
+    parameters: 
+      message:
+        type: string
     steps:
-      - attach_workspace:
-          at: ~/workspace/
-      - run: |
-          ls -la ~/workspace/
-      - store_artifacts:
-          path: ~/workspace/
-          destination: /
-      - slack/notify:
-          color: '#FF00FF'
-          message: ':fire: IOS AND ANDROID ARTIFACTS READY :fire:'
+      - run: 
+          name: "Print Message"
+          command: echo "<< parameters.message >> --- << pipeline.parameters.environment >>"
+
 
 workflows:
-  build:
+  "Dev Workflow":
+    when: 
+      equal: [ "dev", << pipeline.parameters.environment >> ]
     jobs:
-      - buildit:
-          name: build-it-<< matrix.platform >>
-          matrix:
-            alias: "build-it"
-            parameters:
-              platform: ["ios", "android"]
-      - upload:
-          requires:
-            - build-it
+      - print:
+          message: "We in dev"
+
