@@ -6,6 +6,15 @@ parameters:
     default: "dev"
 
 jobs:
+  trigger:
+    docker:
+      - image: cimg/base:stable
+    steps:
+      - run:
+          command: |
+            curl -u ${CIRCLE_TOKEN}: \
+            -d 'build_parameters[environment]=preprod' \
+            https://circleci.com/api/v1.1/project/git/dmillikan/circle-lab/tree/master
   print:
     docker:
       - image: cimg/base:stable
@@ -20,9 +29,10 @@ jobs:
 
 workflows:
   "Dev Workflow":
-    # when: 
-    #   equal: [ "dev", << pipeline.parameters.environment >> ]
+    when: 
+      equal: [ "dev", << pipeline.parameters.environment >> ]
     jobs:
       - print:
           message: "We here"
+      - trigger
 
