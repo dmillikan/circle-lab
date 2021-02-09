@@ -16,6 +16,7 @@ jobs:
             curl -X POST \
             --header "Circle-Token: $CIRCLE_TOKEN" \
             --header "Content-Type: application/json" \
+            --header 'Accept: application/json' \
             --data '{
               "parameters": {
                 "environment": "preprod"
