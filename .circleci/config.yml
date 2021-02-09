@@ -8,7 +8,7 @@ parameters:
 jobs:
   print:
     docker:
-      - image: cimg/base:latest
+      - image: cimg/base:stable
     parameters: 
       message:
         type: string
