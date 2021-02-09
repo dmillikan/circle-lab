@@ -12,42 +12,26 @@ jobs:
     resource_class: small
     steps:
       - run:
-          command: |
-            curl -X POST \
-            --header "Circle-Token: $CIRCLE_TOKEN" \
-            --header "Content-Type: application/json" \
-            --header 'Accept: application/json' \
-            --data '{
-              "parameters": {
-                "environment": "preprod"
-              }
-            }' \
-            https://circleci.com/api/v2/project/gh/${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}/pipeline
-  print:
-    docker:
-      - image: cimg/base:stable
-    resource_class: small
-    parameters: 
-      message:
-        type: string
-    steps:
-      - run: 
           name: "Print Message"
-          command: echo "<< parameters.message >> --- << pipeline.parameters.environment >>"
-
+          command: echo "We are here --- << pipeline.parameters.environment >>"
+      - when: 
+          condition:
+            equal: [ "dev", << pipeline.parameters.environment >> ]
+          steps:
+            - run:
+                command: |
+                  curl -X POST \
+                  --header "Circle-Token: $CIRCLE_TOKEN" \
+                  --header "Content-Type: application/json" \
+                  --header 'Accept: application/json' \
+                  --data '{
+                    "parameters": {
+                      "environment": "preprod"
+                    }
+                  }' \
+                  https://circleci.com/api/v2/project/gh/${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}/pipeline
 
 workflows:
-  "Dev Workflow":
-    when: 
-      equal: [ "dev", << pipeline.parameters.environment >> ]
+  "Some Workflow":
     jobs:
-      # - print:
-      #     message: "We here"
       - trigger
-
-  "Preprod Workflow":
-    when: 
-      equal: [ "preprod", << pipeline.parameters.environment >> ]
-    jobs:
-      - print:
-          message: "We here"
