@@ -17,7 +17,7 @@ jobs:
               "parameters": {
                 "environment": "preprod"
               }
-            }' https://circleci.com/api/v2/project/gh/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME/pipeline
+            }' https://circleci.com/api/v2/project/github/dmillikan/circle-lab/pipeline
 
   print:
     docker:
