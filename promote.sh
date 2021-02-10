@@ -55,5 +55,5 @@ echo "Environment after promotion is    :" "$ENVIRONMENT"
 if [ "$ENVIRONMENT" != "terminate" ]
 then
     echo "Will trigger workflow for" "$ENVIRONMENT"
-    #trigger "$ENVIRONMENT" "$REPO_CODE" "$CIRCLE_PROJECT_USERNAME" "$CIRCLE_PROJECT_REPONAME" "$CIRCLE_TOKEN"
+    trigger "$ENVIRONMENT" "$REPO_CODE" "$CIRCLE_PROJECT_USERNAME" "$CIRCLE_PROJECT_REPONAME" "$CIRCLE_TOKEN"
 fi
