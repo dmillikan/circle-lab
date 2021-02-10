@@ -17,7 +17,7 @@ jobs:
           command: echo "We are here --- << pipeline.parameters.environment >>"
       - run:
           name: "Promoting"
-          command: ./promote.sh << pipeline.parameters.environment >>
+          command: ./promote.sh << pipeline.parameters.environment >> gh
 workflows:
   "Some Workflow":
     jobs:
