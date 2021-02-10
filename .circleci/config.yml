@@ -3,7 +3,7 @@ version: 2.1
 parameters:
   environment:
     type: string
-    default: "dev"
+    default: "dm"
 
 jobs:
   main:
