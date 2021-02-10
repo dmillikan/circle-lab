@@ -32,6 +32,27 @@ jobs:
                   https://circleci.com/api/v2/project/gh/${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}/pipeline
 
 workflows:
+<<<<<<< Updated upstream
   "Some Workflow":
+=======
+  "Default":
+    jobs:
+      - print:
+          message: "We here"
+
+  "Dev Workflow":
+    when: 
+      equal: [ "ddev", << pipeline.parameters.environment >> ]
+>>>>>>> Stashed changes
     jobs:
       - trigger
+<<<<<<< Updated upstream
+=======
+
+  "Preprod Workflow":
+    when: 
+      equal: [ "dpreprod", << pipeline.parameters.environment >> ]
+    jobs:
+      - print:
+          message: "We here"
+>>>>>>> Stashed changes
