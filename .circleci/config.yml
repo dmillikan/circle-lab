@@ -21,19 +21,16 @@ jobs:
 workflows:
   Deploy Dev:
     when:
-      condition:
-        equal: [ "dev" , << pipeline.parameters.environment >> ]
+      equal: [ "dev" , << pipeline.parameters.environment >> ]
     jobs: &deploy_job
       - main
 
   Deploy Preprod:
     when:
-      condition:
-        equal: [ "preprod" , << pipeline.parameters.environment >> ]
+      equal: [ "preprod" , << pipeline.parameters.environment >> ]
     jobs: *deploy_job
   
   Deploy Production:
     when:
-      condition:
-        equal: [ "preprod" , << pipeline.parameters.environment >> ]
+      equal: [ "preprod" , << pipeline.parameters.environment >> ]
     jobs: *deploy_job
