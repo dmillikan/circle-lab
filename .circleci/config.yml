@@ -43,7 +43,5 @@ workflows:
         - not:
             equal: [ "preprod" , << pipeline.parameters.environment >> ]
         - not:
-            equal: [ "prod" , << pipeline.parameters.environment >> ]
-      
-    jobs: &deploy_job
-      - main
+            equal: [ "prod" , << pipeline.parameters.environment >> ]   
+    jobs: *deploy_job
