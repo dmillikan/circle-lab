@@ -19,6 +19,6 @@ jobs:
           name: "Promoting"
           command: ./promote.sh << pipeline.parameters.environment >> gh
 workflows:
-  "<< pipeline.parameters.environment >> Workflow":
+  << pipeline.parameters.environment >> Workflow:
     jobs:
       - main
