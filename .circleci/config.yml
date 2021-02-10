@@ -11,6 +11,7 @@ jobs:
       - image: cimg/base:stable
     resource_class: small
     steps:
+      - checkout
       - run:
           name: "Print Message"
           command: echo "We are here --- << pipeline.parameters.environment >>"
