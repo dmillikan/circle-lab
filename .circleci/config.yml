@@ -32,7 +32,7 @@ workflows:
         equals: [ "preprod" , << pipeline.parameters.environment >> ]
     jobs: *deploy_job
   
-  Deploy Preprod:
+  Deploy Production:
     when:
       condition:
         equals: [ "preprod" , << pipeline.parameters.environment >> ]
