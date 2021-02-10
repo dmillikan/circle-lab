@@ -38,11 +38,14 @@ set_defaults(){
     export CIRCLE_PROJECT_REPONAME="circle-lab"
     
 }
-if [ ! "$CI" ]
+if [ "$CI" ]
 then
+    export ENVIRONMENT=$1
+else
     echo "Setting defaults"
     set_defaults
 fi
+
 echo "Environment before promotion is   :" $ENVIRONMENT
 promote
 echo "Environment after promotion is    :" $ENVIRONMENT
