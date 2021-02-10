@@ -6,7 +6,7 @@ parameters:
     default: "dev"
 
 jobs:
-  trigger:
+  main:
     docker:
       - image: cimg/base:stable
     resource_class: small
@@ -14,45 +14,8 @@ jobs:
       - run:
           name: "Print Message"
           command: echo "We are here --- << pipeline.parameters.environment >>"
-      - when: 
-          condition:
-            equal: [ "dev", << pipeline.parameters.environment >> ]
-          steps:
-            - run:
-                command: |
-                  curl -X POST \
-                  --header "Circle-Token: $CIRCLE_TOKEN" \
-                  --header "Content-Type: application/json" \
-                  --header 'Accept: application/json' \
-                  --data '{
-                    "parameters": {
-                      "environment": "preprod"
-                    }
-                  }' \
-                  https://circleci.com/api/v2/project/gh/${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}/pipeline
 
 workflows:
-<<<<<<< Updated upstream
   "Some Workflow":
-=======
-  "Default":
     jobs:
-      - print:
-          message: "We here"
-
-  "Dev Workflow":
-    when: 
-      equal: [ "ddev", << pipeline.parameters.environment >> ]
->>>>>>> Stashed changes
-    jobs:
-      - trigger
-<<<<<<< Updated upstream
-=======
-
-  "Preprod Workflow":
-    when: 
-      equal: [ "dpreprod", << pipeline.parameters.environment >> ]
-    jobs:
-      - print:
-          message: "We here"
->>>>>>> Stashed changes
+      - main
