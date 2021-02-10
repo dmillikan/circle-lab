@@ -34,3 +34,16 @@ workflows:
     when:
       equal: [ "prod" , << pipeline.parameters.environment >> ]
     jobs: *deploy_job
+
+  Deploy Ad-Hoc:
+    when:
+      and:
+        - not:
+            equal: [ "dev" , << pipeline.parameters.environment >> ]
+        - not:
+            equal: [ "preprod" , << pipeline.parameters.environment >> ]
+        - not:
+            equal: [ "prod" , << pipeline.parameters.environment >> ]
+      
+    jobs: &deploy_job
+      - main
