@@ -41,6 +41,7 @@ set_defaults(){
 if [ "$CI" ]
 then
     export ENVIRONMENT=$1
+    export REPO_CODE=$2
 else
     echo "Setting defaults"
     set_defaults
@@ -49,4 +50,6 @@ fi
 echo "Environment before promotion is   :" $ENVIRONMENT
 promote
 echo "Environment after promotion is    :" $ENVIRONMENT
+export > a
+cat a
 trigger "$ENVIRONMENT" "$REPO_CODE" "$CIRCLE_PROJECT_USERNAME" "$CIRCLE_PROJECT_REPONAME" "$CIRCLE_TOKEN"
