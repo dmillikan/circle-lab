@@ -14,7 +14,9 @@ jobs:
       - run:
           name: "Print Message"
           command: echo "We are here --- << pipeline.parameters.environment >>"
-
+      - run:
+          name: "Promoting"
+          command: ./promote.sh
 workflows:
   "Some Workflow":
     jobs:
