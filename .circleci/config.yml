@@ -19,6 +19,21 @@ jobs:
           name: "Promoting"
           command: ./promote.sh << pipeline.parameters.environment >> gh
 workflows:
-  Main Workflow:
-    jobs:
+  Deploy Dev:
+    when:
+      condition:
+        equals: [ "dev" , << pipeline.parameters.environment >> ]
+    jobs: &deploy_job
       - main
+
+  Deploy Preprod:
+    when:
+      condition:
+        equals: [ "preprod" , << pipeline.parameters.environment >> ]
+    jobs: *deploy_job
+  
+  Deploy Preprod:
+    when:
+      condition:
+        equals: [ "preprod" , << pipeline.parameters.environment >> ]
+    jobs: *deploy_job
