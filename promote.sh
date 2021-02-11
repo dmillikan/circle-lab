@@ -1,5 +1,5 @@
 #! /bin/bash
-
+# move the head
 promote(){
     case $ENVIRONMENT in
         dev)
