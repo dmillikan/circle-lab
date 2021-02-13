@@ -8,7 +8,8 @@ write_log(){
         echo "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
         echo "X     $1:     $2"
         echo "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
-    else
+    elif [ $(echo "|$CI|") = "||" ] || [ $(echo "|$CI|") = "|0|" ]
+    then
         echo "$1:       $2"
     fi
 }
@@ -73,7 +74,6 @@ bump_version(){
 save_version_file(){
     write_log "INFO" "Saving new version $NEW_VERSION to file ver"
     echo $NEW_VERSION > ver
-    cat ver
 }
 
 get_build(){
@@ -115,7 +115,6 @@ get_version(){
 validate_input(){
     write_log "INFO" "Validaing input based on semver bump options"
     write_log "INFO" "      vershion.sh (major|minor|patch) (rc|release)"
-   
     case $1 in
         "major")
             write_log "INFO" "  Bump: $1"
@@ -159,11 +158,12 @@ main(){
     get_version
     get_build
     bump_version $1 $2
+    echo $NEW_VERSION
 }
 
 # Will not run if sourced for bats-core tests.
 # View src/tests for more information.
 ORB_TEST_ENV="bats-core"
 if [ "${0#*$ORB_TEST_ENV}" == "$0" ]; then
-    main
+    main $1 $2
 fi
