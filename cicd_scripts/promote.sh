@@ -3,22 +3,26 @@
 # cicd_scripts/promote.sh
 
 write_log(){
-    if [ $1 = "ERROR" ]
+    if [ $(echo "|$CI|") = "||" ] || [ $(echo "|$CI|") = "|0|" ]
     then
-        if [ $3 = "header" ]
+        if [ $1 = "ERROR" ]
         then
-            echo "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
+            if [ $3 = "header" ]
+            then
+                echo "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
+            fi
+            echo "X     $1:     $2"
+            if [ $3 = "footer" ]
+            then
+                echo "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
+                echo "script is terminating"
+                exit 1
+            fi
+        else
+            echo "$1:       $2"
         fi
-        echo "X     $1:     $2"
-        if [ $3 = "footer" ]
-        then
-            echo "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
-            echo "script is terminating"
-            exit 1
-        fi
-    else
-        echo "$1:       $2"
     fi
+
 }
 
 promote(){
@@ -33,7 +37,7 @@ promote(){
             ENVIRONMENT="terminate"
         ;;
     esac
-    export ENVIRONMENT
+    echo $ENVIRONMENT
 }
 
 trigger(){
@@ -65,15 +69,21 @@ trigger(){
         parse_response "$tmp_fil"
     else
         rm $tmp_fil
-        write_log "ERROR" "Curl Failed" "header"
-        write_log "ERROR" "$header_result" "footer"
+        if [ $(echo "|$CI|") = "|1|" ]
+        then
+            echo "$header_result"
+        else
+            write_log "ERROR" "Curl Failed" "header"
+            write_log "ERROR" "$header_result" "footer"
+        fi
     fi
 }
 
 parse_response(){
     write_log "INFO" "Parsing Trigger Response"
+    tmp_fil=$1
     export RESPONSE_MESSAGE=$( jq ".message" < "$tmp_fil" | sed 's/\"//g' )
-    if [ -n $RESPONSE_MESSAGE ]
+    if [ $(echo "|$RESPONSE_MESSAGE|") = "|null|" ]
     then
         export workflow_number=$( jq ".number" < "$tmp_fil" | sed 's/\"//g' )
         export workflow_state=$( jq ".state" < "$tmp_fil" | sed 's/\"//g' )
@@ -83,45 +93,45 @@ parse_response(){
         write_log "INFO" "      Workflow Number : $workflow_number"
         write_log "INFO" "      Triggered at    : $workflow_created_at"
         write_log "INFO" "      State           : $workflow_state"
+        
+        if [ $(echo "|$CI|") = "|1|" ]
+        then
+            if [ $workflow_number -eq 136 ]
+            then
+                echo "$workflow_number"
+            else
+                echo "$workflow_state"
+            fi
+        fi
     else
         rm "$tmp_fil"
-        case $RESPONSE_MESSAGE in
+        case "$RESPONSE_MESSAGE" in
             "Permission denied")
-                write_log "ERROR" "Trigger Response Found : $1" "header"
-                write_log "ERROR" '   Please set $CIRCLE_TOKEN environment variable' "footer"
+                if [ $(echo "|$CI|") = "||" ] || [ $(echo "|$CI|") = "|0|" ]
+                then
+                    write_log "ERROR" "Trigger Response Found : $1" "header"
+                    write_log "ERROR" '   Please set $CIRCLE_TOKEN environment variable' "footer"
+                else
+                    echo "ERROR"
+                fi
                 ;;
             "Project not found")
-                write_log "ERROR" "Trigger Response Found : $1" "header"
-                write_log "ERROR" '   Please set $CIRCLE_TOKEN environment variable' "footer"
+                if [ $(echo "|$CI|") = "||" ] || [ $(echo "|$CI|") = "|0|" ]
+                then
+                    write_log "ERROR" "Trigger Response Found : $1" "header"
+                    write_log "ERROR" '   Please set $CIRCLE_TOKEN environment variable' "footer"
+                else
+                    echo "ERROR"
+                fi
                 ;;
-        esac
+        esac  
     fi
-
-}
-
-set_defaults(){
-    export ENVIRONMENT="dev"
-    export REPO_CODE="gh"
-    export CIRCLE_PROJECT_USERNAME="dmillikan"
-    export CIRCLE_PROJECT_REPONAME="circle-lab"
-    
 }
 
 main(){
-    if [ "$CI" ]
-    then
-        export ENVIRONMENT=$1
-        export REPO_CODE=$2
-    else
-        write_log "INFO" "Setting defaults"
-        set_defaults
-    fi
-
     write_log "INFO" "Environment before promotion is   : $ENVIRONMENT"
-    promote
+    ENVIRONMENT=$(promote)
     write_log "INFO" "Environment after promotion is    : $ENVIRONMENT"
-    # export > a
-    # cat a
     if [ "$ENVIRONMENT" != "terminate" ]
     then
         write_log "INFO" "Will trigger workflow for" "$ENVIRONMENT"
