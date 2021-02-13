@@ -1,11 +1,9 @@
 #! /bin/bash
-# requires semver
+
+# cicd_scripts/version.sh
 
 write_log(){
-    LOG_MESSAGE_LEVEL=$1
-    LOG_MESSAGE=$2
-    
-    if [ $LOG_MESSAGE_LEVEL = "ERROR" ]
+    if [ $1 = "ERROR" ]
     then
         echo "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
         echo "X     $1:     $2"
@@ -47,7 +45,7 @@ which_semver(){
 
 bump_version(){
     which_semver
-    echo "Request for $1 bump from prior version $PRIOR_VERSION"
+    write_log "INFO" "Request for $1 bump from prior version $PRIOR_VERSION"
     if [ -n "$IS_DEV_BUILD" ]
     then
         NEW_VERSION=$(semver bump build $BUILD_NUM $PRIOR_VERSION)
@@ -69,11 +67,11 @@ bump_version(){
         esac
     fi
     
-    echo "New Version = $NEW_VERSION"
+    write_log "INFO" "New Version = $NEW_VERSION"
 }
 
 save_version_file(){
-    echo "Saving new version $NEW_VERSION to file ver"
+    write_log "INFO" "Saving new version $NEW_VERSION to file ver"
     echo $NEW_VERSION > ver
     cat ver
 }
@@ -156,7 +154,16 @@ validate_input(){
     write_log "INFO" "  Will bump with command: semver bump $1 $2"
 }
 
-validate_input $1 $2
-get_version
-get_build
-bump_version $1 $2
+main(){
+    validate_input $1 $2
+    get_version
+    get_build
+    bump_version $1 $2
+}
+
+# Will not run if sourced for bats-core tests.
+# View src/tests for more information.
+ORB_TEST_ENV="bats-core"
+if [ "${0#*$ORB_TEST_ENV}" == "$0" ]; then
+    main
+fi
