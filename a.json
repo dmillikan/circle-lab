@@ -1,0 +1,29 @@
+{
+    "celsius-data-storage": [
+        "apps/celsius-data-storage/"
+    ],
+    "data-disc-sls": [
+        "apps/data-disc-sls/"
+    ],
+    "device-gql-sls": [
+        "apps/device-gql-sls/"
+    ],
+    "user-gql-sls": [
+        "apps/user-gql-sls"
+    ],
+    "flespi-sparkplug-converter": [
+        "apps/flespi-sparkplug-converter/"
+    ],
+    "celsius-dashboard": [
+        "apps/celsius-dashboard/"
+    ],
+    "celsius-action-engine": [
+        "apps/celsius-action-engine"
+    ],
+    "strapi-infra": [
+        "apps/strapi-infra"
+    ],
+    "external-rest-api-sls": [
+        "apps/external-rest-api-sls"
+    ]
+}

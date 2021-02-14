@@ -1,0 +1,3 @@
+echo $(jq ".packages"  < monorepo.json) > a.json
+echo $(jq "keys"  < a.json) > b.json
+jq .[] < b.json
