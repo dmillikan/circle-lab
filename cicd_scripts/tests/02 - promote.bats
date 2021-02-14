@@ -18,27 +18,27 @@ setup() {
 
 }
 
-@test 'promote.sh  - Function  -  1: Promote Dev' {
+@test 'promote.sh  - Function  -  1: Get Next Env - Dev' {
     ENVIRONMENT="dev"
-    result=$(promote)
+    result=$(get_next_environment)
     [ "$result" = "preprod" ]
 }
 
-@test 'promote.sh  - Function  -  2: Promote Preprod' {
+@test 'promote.sh  - Function  -  2: Get Next Env - Preprod' {
     ENVIRONMENT="preprod"
-    result=$(promote)
+    result=$(get_next_environment)
     [ "$result" = "prod" ]
 }
 
-@test 'promote.sh  - Function  -  3: Promote Prod' {
+@test 'promote.sh  - Function  -  3: Get Next Env - Prod' {
     ENVIRONMENT="prod"
-    result=$(promote)
+    result=$(get_next_environment)
     [ "$result" = "terminate" ]
 }
 
-@test 'promote.sh  - Function  -  4: Promote Other' {
+@test 'promote.sh  - Function  -  4: Get Next Env - Other' {
     ENVIRONMENT="other"
-    result=$(promote)
+    result=$(get_next_environment)
     [ "$result" = "terminate" ]
 }
 
@@ -67,7 +67,7 @@ setup() {
         echo 'Please set $CIRCLE_TOKEN envar'
         [ $(echo "|$CIRCLE_TOKEN|") != "||" ]
     fi
-    result=$(main)
+    result=$(promote)
     [ "$result" = "pending" ]
 }
 
@@ -78,7 +78,7 @@ setup() {
         [ $(echo "|$CIRCLE_TOKEN|") != "||" ]
     fi
     unset REPO_CODE
-    result=$(main)
+    result=$(promote)
     [ $(echo "$result" | grep "404" | wc -l) -eq 1 ]
 
 }
@@ -92,12 +92,12 @@ setup() {
     REPO_CODE="gh"
     unset CIRCLE_PROJECT_USERNAME
     CIRCLE_PROJECT_REPONAME="circle-lab"
-    result=$(main)
+    result=$(promote)
     
     [ $(echo "$result" | grep "404" | wc -l) -eq 1 ]
 }
 
-@test 'promote.sh  - Main      -  10: Trigger - Fail - Repo' {
+@test 'promote.sh  - Main     -  10: Trigger - Fail - Repo' {
     if [ $(echo "|$CIRCLE_TOKEN|") == "||" ]
     then
         echo 'Please set $CIRCLE_TOKEN envar'
@@ -106,7 +106,7 @@ setup() {
     REPO_CODE="gh"
     CIRCLE_PROJECT_USERNAME="dmillikan"
     unset CIRCLE_PROJECT_REPONAME
-    result=$(main)
+    result=$(promote)
     
     [ $(echo "$result" | grep "404" | wc -l) -eq 1 ]
 }

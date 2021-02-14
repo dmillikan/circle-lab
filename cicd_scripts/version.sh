@@ -1,17 +1,9 @@
 #! /bin/bash
 
 # cicd_scripts/version.sh
-
-write_log(){
-    if [ $1 = "ERROR" ]
-    then
-        echo "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
-        echo "X     $1:     $2"
-        echo "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
-    elif [ $(echo "|$CI|") = "||" ] || [ $(echo "|$CI|") = "|0|" ]
-    then
-        echo "$1:       $2"
-    fi
+setup() {
+    # Load our script file.
+    source ./cicd_scripts/logger.sh
 }
 
 which_semver(){
@@ -153,7 +145,8 @@ validate_input(){
     write_log "INFO" "  Will bump with command: semver bump $1 $2"
 }
 
-main(){
+version(){
+    setup
     validate_input $1 $2
     get_version
     get_build
@@ -165,5 +158,5 @@ main(){
 # View src/tests for more information.
 ORB_TEST_ENV="bats-core"
 if [ "${0#*$ORB_TEST_ENV}" == "$0" ]; then
-    main $1 $2
+    version $1 $2
 fi
