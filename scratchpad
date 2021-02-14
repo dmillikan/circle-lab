@@ -1,3 +1,18 @@
 echo $(jq ".packages"  < monorepo.json) > a.json
 echo $(jq "keys"  < a.json) > b.json
-jq .[] < b.json
+jq .[] < b.json | sed 's/\"//g'
+jq .[] < manifest.json | sed 's/\"//g'
+
+
+for i in $(jq .[] < b.json | sed 's/\"//g')
+do
+    for j in $(jq .[] < manifest.json | sed 's/\"//g')
+    do
+        if [ "$i" == "$j" ]
+        then
+            echo "$i:$j"
+
+        fi
+    done
+done
+
