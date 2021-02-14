@@ -23,7 +23,3 @@ write_log(){
     fi
 
 }
-ORB_TEST_ENV="bats-core"
-if [ "${0#*$ORB_TEST_ENV}" == "$0" ]; then
-    write_log
-fi
