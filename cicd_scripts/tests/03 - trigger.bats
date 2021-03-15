@@ -21,7 +21,10 @@ setup() {
         echo 'Please set $CIRCLE_TOKEN envar'
         [ $(echo "|$CIRCLE_TOKEN|") != "||" ]
     fi
+    echo "Running trigger "$ENVIRONMENT $REPO_CODE $CIRCLE_PROJECT_USERNAME $CIRCLE_PROJECT_REPONAME $CIRCLE_TOKEN
     result=$(trigger $ENVIRONMENT $REPO_CODE $CIRCLE_PROJECT_USERNAME $CIRCLE_PROJECT_REPONAME $CIRCLE_TOKEN)
+    result="$(echo $result | sed 's/\r$//g')"
+
     [ "$result" = "pending" ]
 }
 

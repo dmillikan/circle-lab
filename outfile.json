@@ -1,1 +1,0 @@
-{ "master_workflow": [ "data-disc-sls", "device-gql-sls", "user-gql-sls", "celsius-action-engine", "celsius-dashboard" ], "future_position": [ "device-gql-sls", "user-gql-sls", "celsius-action-engine", "celsius-dashboard" ], "current_position": "data-disc-sls" }

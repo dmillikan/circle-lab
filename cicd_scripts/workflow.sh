@@ -25,24 +25,23 @@ build_workflow_file(){
             fi
         done
     done
-    export current_position=$(cat "$outfile" | jq -r '.future_position[0]')
+    current_position=$(cat "$outfile" | jq -r '.future_position[0]')
     echo $(cat "$outfile" | jq '. |= .+ { "current_position": $ENV.current_position }') > "$outfile"
     echo $(cat "$outfile" | jq 'del(.future_position[0])') > "$outfile"
-    echo "Workflow File Created"
+
 }
 
 advance_workflow(){
     if [ $(cat "$outfile" | jq '.future_position[0]') == "null" ]
     then
-        # echo "terminate"
-        # write_log "INFO" "No More to Advance"
+        future_position="terminate"
         build_workflow_file
     else
-        export current_position=$(cat "$outfile" | jq -r '.current_position')
-        export future_position=$(cat "$outfile" | jq -r '.future_position[0]')
-        # echo $(cat "$outfile" | jq 'del(.current_position)') > "$outfile" 
-        # echo $(cat "$outfile" | jq '. |= .+ { "current_position": $ENV.future_position }') > "$outfile"
-        # echo $(cat "$outfile" | jq 'del(.future_position[0])') > "$outfile"  
+        current_position=$(cat "$outfile" | jq -r '.current_position')
+        future_position=$(cat "$outfile" | jq -r '.future_position[0]')
+        echo $(cat "$outfile" | jq 'del(.current_position)') > "$outfile" 
+        echo $(cat "$outfile" | jq '. |= .+ { "current_position": $ENV.future_position }') > "$outfile"
+        echo $(cat "$outfile" | jq 'del(.future_position[0])') > "$outfile"  
 
         if [ -z $CI ]
         then
@@ -55,7 +54,7 @@ advance_workflow(){
 
         write_log "INFO" "Advanced From     : $current_position"
         write_log "INFO" "Advanced to       : $future_position"
-    fi   
+    fi 
 }
 
 main(){
@@ -73,5 +72,5 @@ main(){
 
 ORB_TEST_ENV="bats-core"
 if [ "${0#*$ORB_TEST_ENV}" == "$0" ]; then
-    main $1
+    main $@
 fi

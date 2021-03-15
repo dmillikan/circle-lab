@@ -4,45 +4,18 @@
 setup() {
     # Load our script file.
     source ./cicd_scripts/logger.sh
-}
-
-which_semver(){
-    SEMVER_PATH=$(which semver)
-    SEMVER_PATH_DEPTH=$( echo "$SEMVER_PATH" | awk -F "/" '{print NF-1}')
-    if [ $SEMVER_PATH_DEPTH -eq -1 ]
-    then
-        if [ -d "semver-tool" ]
-        then
-            write_log "INFO" "Semver-tool folder found?  Will attempt install from folder"
-        else
-            SEMVER_GIT_URL="https://github.com/fsaintjacques/semver-tool"        
-            write_log "INFO"  " semver not found"
-            write_log "INFO"  " Installing semver from $SEMVER_GIT_URL"
-            git clone "$SEMVER_GIT_URL"
-        fi
-
-        if [ -d "semver-tool" ]
-        then
-            cd semver-tool
-            write_log "INFO" "  making semver"
-            $(make install)
-        fi        
-        
-        write_log "INFO" "Semver installation complete"
-        write_log "INFO" "  Validating install"
-        write_log "INFO" "      $(which semver)"
-        write_log "INFO" "      $(semver --version)"
-    fi
-    
+    source ./cicd_scripts/semver.sh
 }
 
 bump_version(){
-    which_semver
-    write_log "INFO" "Request for $1 bump from prior version $PRIOR_VERSION"
+    source ./cicd_scripts/semver.sh
+    
     if [ -n "$IS_DEV_BUILD" ]
     then
+        write_log "INFO" "Dev Build"
         NEW_VERSION=$(semver bump build $BUILD_NUM $PRIOR_VERSION)
     else
+        write_log "INFO" "Request for $1 bump from prior version $PRIOR_VERSION"
         NEW_VERSION=$(semver bump $1 $PRIOR_VERSION)
 
         case $2 in
@@ -64,8 +37,8 @@ bump_version(){
 }
 
 save_version_file(){
-    write_log "INFO" "Saving new version $NEW_VERSION to file ver"
-    echo $NEW_VERSION > ver
+    write_log "INFO" "Saving new version $NEW_VERSION to file $VERSION_FILE"
+    echo $NEW_VERSION > $VERSION_FILE
 }
 
 get_build(){
@@ -90,14 +63,15 @@ get_version(){
     else
         write_log "INFO" "  Envar value PRIOR_VERSION not found"
         write_log "INFO" "  Searching for ver file"
-        if [ -e "ver" ]
+        if [ -e "$VERSION_FILE" ]
         then
             write_log "INFO" "  Version file found, reading input"
-            PRIOR_VERSION=$( cat ver )
+            PRIOR_VERSION=$( cat $VERSION_FILE )
         else
-            write_log "INFO" "  Version file not found will init"
-            echo "0.0.0" > ver
-            PRIOR_VERSION=$( cat ver )
+            VERSION_FILE=$(openssl rand -hex 8).version
+            write_log "INFO" "  Version file not found will init: $VERSION_FILE"
+            echo "0.0.0" > $VERSION_FILE
+            PRIOR_VERSION=$( cat $VERSION_FILE )
         fi
     fi
 
@@ -147,16 +121,15 @@ validate_input(){
 
 version(){
     setup
-    validate_input $1 $2
+    validate_input $@
     get_version
     get_build
-    bump_version $1 $2
-    echo $NEW_VERSION
+    bump_version $@
 }
 
 # Will not run if sourced for bats-core tests.
 # View src/tests for more information.
-# ORB_TEST_ENV="bats-core"
-# if [ "${0#*$ORB_TEST_ENV}" == "$0" ]; then
-#     version $1 $2
-# fi
+ORB_TEST_ENV="bats-core"
+if [ "${0#*$ORB_TEST_ENV}" == "$0" ]; then
+    version $@
+fi

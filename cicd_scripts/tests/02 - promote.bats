@@ -17,24 +17,24 @@ setup() {
 
 @test 'promote.sh - 1 : Get Next Env - Dev' {
     ENVIRONMENT="dev"
-    result=$(get_next_environment)
-    [ "$result" = "preprod" ]
+    get_next_environment
+    [ "$ENVIRONMENT" = "preprod" ]
 }
 
 @test 'promote.sh - 2 : Get Next Env - Preprod' {
     ENVIRONMENT="preprod"
-    result=$(get_next_environment)
-    [ "$result" = "prod" ]
+    get_next_environment
+    [ "$ENVIRONMENT" = "prod" ]
 }
 
 @test 'promote.sh - 3 : Get Next Env - Prod' {
     ENVIRONMENT="prod"
-    result=$(get_next_environment)
-    [ "$result" = "terminate" ]
+    get_next_environment
+    [ "$ENVIRONMENT" = "terminate" ]
 }
 
 @test 'promote.sh - 4 : Get Next Env - Other' {
     ENVIRONMENT="other"
-    result=$(get_next_environment)
-    [ "$result" = "terminate" ]
+    get_next_environment
+    [ "$ENVIRONMENT" = "terminate" ]
 }

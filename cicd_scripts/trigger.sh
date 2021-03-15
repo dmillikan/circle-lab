@@ -7,43 +7,31 @@ setup() {
     source ./cicd_scripts/logger.sh
 }
 
-trigger(){
-    tmp_fil=$(openssl rand -hex 8)
-    header_result_file=$(openssl rand -hex 8)
-    
-    cirlce_ci_url="https://circleci.com/api/v2/project/"$2"/"$3"/"$4"/pipeline"
-    write_log "INFO" "Triggering Workflow at : $cirlce_ci_url"
-    
-    curl -X POST \
-        --silent \
-        --output "$tmp_fil" \
-        --dump-header "$header_result_file" \
-        --header "Circle-Token: $5" \
-        --header "Content-Type: application/json" \
-        --header 'Accept: application/json' \
-        --data '{
-            "parameters": {
-            "environment": "'"$1"'"
-            }
-        }' \
-        $cirlce_ci_url
-    
-    export curl_response_is_good="|$(cat $header_result_file | grep "HTTP/1.1" | grep "201")|"
-    export header_result=$(cat $header_result_file | grep "HTTP/1.1")
-    rm $header_result_file
-    if [ "$curl_response_is_good" != "||" ]
+addAttribute(){
+    echo "$skey"
+    if [ -z $skeys ]
     then
-        parse_response "$tmp_fil"
+        k=$(echo "$1")
+        v=$(echo "$2")
     else
-        rm $tmp_fil
-        if [ $(echo "|$CI|") = "|1|" ]
-        then
-            echo "$header_result"
-        else
-            write_log "ERROR" "Curl Failed" "header"
-            write_log "ERROR" "$header_result" "footer"
-        fi
+        k=$(echo "|$1")
+        v=$(echo "|$2")
     fi
+    skeys=$(echo "$skeys$k")
+    svals=$(echo "$svals$v")
+}
+
+buildJson(){
+    s="$skeys
+$svals"
+    path=$1
+    parms=$(jq -Rn --arg path "$path" '
+    setpath([$path];
+    ( input | split("|") ) as $keys |
+    ( input | split("|") ) as $vals |
+    [[$keys, $vals] | transpose[] | {key:.[0],value:.[1]}] | from_entries)
+    ' <<<"$s")
+    jq . <<< "$parms"
 }
 
 parse_response(){
@@ -95,9 +83,48 @@ parse_response(){
     fi
 }
 
+trigger(){
+    tmp_fil=$(openssl rand -hex 8)
+    header_result_file=$(openssl rand -hex 8)
+    
+    cirlce_ci_url="https://circleci.com/api/v2/project/"$2"/"$3"/"$4"/pipeline"
+    write_log "INFO" "Triggering Workflow at : $cirlce_ci_url"
+    
+    addAttribute "environment" "$1"
+    data=$(buildJson "parameters")
+    write_log "INFO" "Posting with data $data"
+    curl -X POST \
+        --silent \
+        --output "$tmp_fil" \
+        --dump-header "$header_result_file" \
+        --header "Circle-Token: $5" \
+        --header "Content-Type: application/json" \
+        --header 'Accept: application/json' \
+        --data "$data" \
+        $cirlce_ci_url
+    
+    export curl_response_is_good="|$(cat $header_result_file | grep "HTTP/1.1" | grep "201")|"
+    export header_result=$(cat $header_result_file | grep "HTTP/1.1")
+    rm $header_result_file
+    if [ "$curl_response_is_good" != "||" ]
+    then
+        parse_response "$tmp_fil"
+    else
+        rm $tmp_fil
+        if [ $(echo "|$CI|") = "|1|" ]
+        then
+            echo "$header_result"
+        else
+            write_log "ERROR" "Curl Failed" "header"
+            write_log "ERROR" "$header_result" "footer"
+        fi
+    fi
+}
+
 # Will not run if sourced for bats-core tests.
 # View src/tests for more information.
-# ORB_TEST_ENV="bats-core"
-# if [ "${0#*$ORB_TEST_ENV}" == "$0" ]; then
-#     trigger $1 $2 $3 $4
-# fi
+ORB_TEST_ENV="bats-core"
+if [ "${0#*$ORB_TEST_ENV}" == "$0" ]; then
+    setup
+    trigger $@
+fi

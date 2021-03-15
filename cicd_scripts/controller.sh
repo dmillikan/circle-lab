@@ -5,6 +5,7 @@ setup() {
     # Load our script file.
     source ./cicd_scripts/logger.sh
     source ./cicd_scripts/promote.sh
+    source ./cicd_scripts/semver.sh
     source ./cicd_scripts/version.sh
     source ./cicd_scripts/trigger.sh
 }

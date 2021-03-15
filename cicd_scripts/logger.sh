@@ -17,19 +17,22 @@ write_log(){
             bumper="------------------------------------------------------------------------------------------"
             gutter=""
         ;; 
-    esac  
-
-    case "$3" in
-        "header")
-            headfoot="$3"
-        ;;
-        "footer")
-            headfoot="$3"
-        ;;
-            *)
-            headfoot="none"
-        ;;
     esac
+
+    if [ -z "$3" ]
+    then
+        case "$3" in
+            "header")
+                headfoot="$3"
+            ;;
+            "footer")
+                headfoot="$3"
+            ;;
+                *)
+                headfoot="none"
+            ;;
+        esac
+    fi
  
     if [ "$headfoot" = "header" ]
     then
